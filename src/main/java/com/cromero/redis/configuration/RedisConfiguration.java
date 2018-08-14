@@ -43,10 +43,13 @@ public class RedisConfiguration {
         final SocketOptions socketOptions = SocketOptions.builder().connectTimeout(socketTimeout).build();
         final ClientOptions clientOptions =
                 ClientOptions.builder().socketOptions(socketOptions).build();
+
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+                .commandTimeout(redisCommandTimeout)
                 .clientOptions(clientOptions).build();
         RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(redisHost,
                 redisPort);
+
         final LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(serverConfig,
                 clientConfig);
         lettuceConnectionFactory.setValidateConnection(true);
