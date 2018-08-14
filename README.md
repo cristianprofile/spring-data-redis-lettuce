@@ -4,6 +4,34 @@ Spring Data Redis Lettuce factory configuration is a project definig the easy wa
 # Define diferent timeout values (socket timeout versus paramenters timeout)
 
 
+Default socket timeout is 10 seconds
+Default command timeout is 60 seconds
+
+We define lettuce connection factory with custom socket and command timeout:
+
+    @Bean
+       LettuceConnectionFactory lettuceConnectionFactory() {
+   
+           final SocketOptions socketOptions = SocketOptions.builder().connectTimeout(socketTimeout).build();
+           final ClientOptions clientOptions =
+                   ClientOptions.builder().socketOptions(socketOptions).build();
+   
+           LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+                   .commandTimeout(redisCommandTimeout)
+                   .clientOptions(clientOptions).build();
+           RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(redisHost,
+                   redisPort);
+   
+           final LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(serverConfig,
+                   clientConfig);
+           lettuceConnectionFactory.setValidateConnection(true);
+           return new LettuceConnectionFactory(serverConfig, clientConfig);
+   
+   
+       }
+
+![Timeout configuration](/image/timeout_configuration.png?raw=true "Timeout configuration]")
+
 
 
 
